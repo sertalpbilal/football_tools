@@ -1,0 +1,1 @@
+set "GIT_SSH_COMMAND=ssh -i C:/Users/Grape/.ssh/id_rsa_sertalp" 
