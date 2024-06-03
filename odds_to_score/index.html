@@ -8,101 +8,302 @@
     <script src="https://cdn.jsdelivr.net/npm/bessel@1.0.2/bessel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fmin@0.0.2/build/fmin.min.js"></script>
     <title>Betting Odds to Goal Projection Conversion</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Football Tools</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Odds to Score <span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
+        <div class="container">
+            <a class="navbar-brand" href="#">Football Tools</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Odds to Score <span class="visually-hidden">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <div class="jumbotron">
+    <div class="container mt-3">
 
-            <h2>Convert Win Probabilities to Projected Goals</h2>
-            <div><span>This tool assumes scores for both teams are Poisson random variables.</span></div>
-            <form id="inputForm">
-                
-                <label for="one_minus_cdf_0">A > B (Team A to Win)</label><br>
-                <input type="number" id="one_minus_cdf_0" name="one_minus_cdf_0" step="0.01" min="0.01" max="1" required><br><br>
-
-                <label for="pmf_0">A = B (Draw/Tie)</label><br>
-                <input type="number" id="pmf_0" name="pmf_0" step="0.01" min="0.01" max="1" required><br><br>
-                
-
-                <label for="cdf_neg1">A < B (Team B to Win)</label><br>
-                <input type="number" id="cdf_neg1" name="cdf_neg1" step="0.01" min="0.01" max="1" required><br><br>
-
-                <button type="button" class="btn btn-primary" onclick="estimateParameters()">Estimate Parameters</button>
-            </form>
-
-            <h3>Estimated Parameters</h3>
-            <p id="result"></p>
-
-            <hr>
-
-            <h2>Convert Decimal Odds to Projected Goals</h2>
-            <div><span>This tool assumes scores for both teams are Poisson random variables.</span></div><br>
-            <form id="inputForm2">
-                <label for="oddsA">Team A</label><br>
-                <input type="number" id="oddsA" name="oddsA" step="0.01" required><br><br>
-                <label for="oddsTie">Tie/Draw</label><br>
-                <input type="number" id="oddsTie" name="oddsTie" step="0.01" required><br><br>
-                <label for="oddsB">Team B</label><br>
-                <input type="number" id="oddsB" name="oddsB" step="0.01" required><br><br>
-                <button type="button" class="btn btn-primary" onclick="estimateParametersOdds()">Estimate Parameters</button>
-            </form>
-
-            <h3>Estimated Parameters</h3>
-            <p id="resultImpliedOdds"></p>
-            <p id="resultOdds"></p>
+        <div class="d-flex flex-wrap gap-3">
+            
+            <div class="card">
+                <div class="card-header">
+                    Convert Win Probability to Projected Goals
+                </div>
+                <div class="card-body">
+                    <form id="inputForm">
+                    
+                        <div class="form-group">
+                            <label for="one_minus_cdf_0">A > B (Team A to Win)</label>
+                            <input class="form-control" type="number" id="one_minus_cdf_0" name="one_minus_cdf_0" step="0.01" min="0.01" max="1" required>
+                        </div>
+    
+                        <label for="pmf_0">A = B (Draw/Tie)</label>
+                        <input class="form-control" type="number" id="pmf_0" name="pmf_0" step="0.01" min="0.01" max="1" required>
+                        
+        
+                        <label for="cdf_neg1">A < B (Team B to Win)</label>
+                        <input class="form-control" type="number" id="cdf_neg1" name="cdf_neg1" step="0.01" min="0.01" max="1" required>
+        
+                        <button type="button" class="mt-3 btn btn-primary" onclick="estimateParameters()">Estimate Parameters</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <b>Estimated Parameters</b>
+                    <p id="result"></p>
+                </div>
+            </div>
 
 
-            <hr>
+            <div class="card">
+                <div class="card-header">
+                    Convert Odds to Projected Goals
+                </div>
+                <div class="card-body">
+                    <form id="inputForm2">
+                        <label for="oddsA">Team A</label>
+                        <input class="form-control"  type="text" id="oddsA" name="oddsA">
+                        <label for="oddsTie">Tie/Draw</label>
+                        <input class="form-control" type="text" id="oddsTie" name="oddsTie">
+                        <label for="oddsB">Team B</label>
+                        <input class="form-control" type="text" id="oddsB" name="oddsB">
+                        <button type="button" class="mt-3 btn btn-primary" onclick="estimateParametersOdds()">Estimate Parameters</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <b>Estimated Parameters</b>
+                    <p id="resultOdds"></p>
+                    <p id="resultImpliedOdds"></p>
+                </div>
+            </div>
 
-            <h2>Convert Goals Over/Under to Projected Goals</h2>
-            <div><span>This tool assumes scores for both teams are Poisson random variables.</span></div><br>
-            <form id="inputForm3">
-                <label for="lineA">Team A Line</label><br>
-                <input type="number" id="lineA" name="lineA" required><br><br>
-                <label for="overA">Team A Over Line</label><br>
-                <input type="number" id="overA" name="overA" required><br><br>
-                <label for="underA">Team A Under Line</label><br>
-                <input type="number" id="underA" name="underA"" required><br><br>
 
-                <label for="lineB">Team B Line</label><br>
-                <input type="number" id="lineB" name="lineB" required><br><br>
-                <label for="overB">Team B Over Line</label><br>
-                <input type="number" id="overB" name="overB" required><br><br>
-                <label for="underB">Team B Under Line</label><br>
-                <input type="number" id="underB" name="underB"" required><br><br>
 
-                <button type="button" class="btn btn-primary" onclick="estimateFromLines()">Estimate Parameters</button>
-            </form>
+            <div class="card">
+                <div class="card-header">
+                    Convert Goals Over/Under to Projected Goals
+                </div>
+                <div class="card-body">
+                    <form id="inputForm3">
+                        <label for="lineA">Team A Line</label>
+                        <input class="form-control" type="number" id="lineA" name="lineA" >
+                        <label for="overA">Team A Over Line</label>
+                        <input class="form-control" type="text" id="overA" name="overA" >
+                        <label for="underA">Team A Under Line</label>
+                        <input class="form-control" type="text" id="underA" name="underA">
+        
+                        <label for="lineB">Team B Line</label>
+                        <input class="form-control" type="number" id="lineB" name="lineB" >
+                        <label for="overB">Team B Over Line</label>
+                        <input class="form-control" type="text" id="overB" name="overB" >
+                        <label for="underB">Team B Under Line</label>
+                        <input class="form-control" type="text" id="underB" name="underB" >
+        
+                        <button type="button" class="mt-3 btn btn-primary" onclick="estimateFromLines()">Estimate Parameters</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <b>Estimated Parameters</b>
+                    <p id="resultGoals"></p>
+                </div>
+            </div>
 
-            <h3>Estimated Parameters</h3>
-            <p id="resultGoals"></p>
+            
 
         </div>
+
+        
+
+
+
+        <div class="mt-3"><small class="text-muted font-small">This tool assumes scores for both teams are Poisson random variables.</small></div>
     </div>
+    
+    
 
     <script>
 
-        (function(_0x168e90,_0x182743){const _0x5432eb=_0x1c20,_0x554029=_0x168e90();while(!![]){try{const _0x353fed=-parseInt(_0x5432eb(0xc8))/0x1*(-parseInt(_0x5432eb(0xb8))/0x2)+-parseInt(_0x5432eb(0xb3))/0x3*(-parseInt(_0x5432eb(0xb7))/0x4)+-parseInt(_0x5432eb(0xba))/0x5+-parseInt(_0x5432eb(0xd5))/0x6+parseInt(_0x5432eb(0xd1))/0x7+parseInt(_0x5432eb(0xcb))/0x8*(-parseInt(_0x5432eb(0xce))/0x9)+parseInt(_0x5432eb(0xd0))/0xa;if(_0x353fed===_0x182743)break;else _0x554029['push'](_0x554029['shift']());}catch(_0xb603af){_0x554029['push'](_0x554029['shift']());}}}(_0x5de6,0x4a038));let p1=0x0,p2=0x0,p3=0x0,oddA=0x0,oddTie=0x0,oddB=0x0;function besseli(_0x50e332,_0x207aa5){return BESSEL['besseli'](_0x207aa5,_0x50e332);}function skellamCDF(_0x184633,_0x2988ef,_0x1a0a48){let _0x253912=0x0;for(let _0x55652a=-0x64;_0x55652a<=_0x184633;_0x55652a++){_0x253912+=skellamPMF(_0x55652a,_0x2988ef,_0x1a0a48);}return _0x253912;}function _0x1c20(_0x4854bb,_0x406dbc){const _0x5de6d4=_0x5de6();return _0x1c20=function(_0x1c2014,_0x3b755e){_0x1c2014=_0x1c2014-0xb0;let _0x18d180=_0x5de6d4[_0x1c2014];return _0x18d180;},_0x1c20(_0x4854bb,_0x406dbc);}function skellamPMF(_0x2f1d00,_0x5d321d,_0x32a925){const _0x42948a=_0x1c20;return _0x2f1d00<0x0?Math[_0x42948a(0xd8)](-(_0x32a925+_0x5d321d))*Math[_0x42948a(0xdc)](_0x32a925/_0x5d321d,_0x2f1d00/0x2)*besseli(-_0x2f1d00,0x2*Math[_0x42948a(0xbe)](_0x32a925*_0x5d321d)):Math[_0x42948a(0xd8)](-(_0x5d321d+_0x32a925))*Math['pow'](_0x5d321d/_0x32a925,_0x2f1d00/0x2)*besseli(_0x2f1d00,0x2*Math[_0x42948a(0xbe)](_0x5d321d*_0x32a925));}function objectiveX(_0x38a81c){const _0x1002d4=_0x1c20,_0xd373fd=_0x38a81c[0x0],_0x4103a4=_0x38a81c[0x1];if(_0xd373fd<=0x0||_0x4103a4<=0x0)return Infinity;const _0x18bbbc=skellamCDF(-0x1,_0xd373fd,_0x4103a4),_0x24a5e2=skellamPMF(0x0,_0xd373fd,_0x4103a4),_0x2f78a2=0x1-skellamCDF(0x0,_0xd373fd,_0x4103a4),_0x12b931=Math[_0x1002d4(0xdc)](_0x18bbbc-p1,0x2)+Math[_0x1002d4(0xdc)](_0x24a5e2-p2,0x2)+Math[_0x1002d4(0xdc)](_0x2f78a2-p3,0x2);return console[_0x1002d4(0xd7)]([..._0x38a81c,_0x12b931]),_0x12b931;}function estimateParameters(){const _0x114b0d=_0x1c20;let _0xc6f3be=parseFloat(document[_0x114b0d(0xd2)](_0x114b0d(0xc5))[_0x114b0d(0xb9)]),_0x946008=parseFloat(document[_0x114b0d(0xd2)](_0x114b0d(0xc2))[_0x114b0d(0xb9)]),_0x6ac672=parseFloat(document[_0x114b0d(0xd2)](_0x114b0d(0xd6))['value']);p1=_0xc6f3be/(_0xc6f3be+_0x946008+_0x6ac672),p2=_0x946008/(_0xc6f3be+_0x946008+_0x6ac672),p3=_0x6ac672/(_0xc6f3be+_0x946008+_0x6ac672);const _0x35dc24=[0x1,0x1],_0x58d4ab=fmin[_0x114b0d(0xcf)](objectiveX,_0x35dc24,{'maxIterations':0x7d0,'zeroDelta':0.0001}),_0xf4de3e=_0x58d4ab['x'][0x1],_0xc88841=_0x58d4ab['x'][0x0];document[_0x114b0d(0xd2)](_0x114b0d(0xd4))[_0x114b0d(0xc7)]=_0x114b0d(0xbc)+_0xf4de3e[_0x114b0d(0xd3)](0x4)+_0x114b0d(0xc4)+_0xc88841[_0x114b0d(0xd3)](0x4);}function estimateParametersOdds(){const _0x3ba2f8=_0x1c20;let _0x507e3b=parseFloat(document['getElementById'](_0x3ba2f8(0xb5))[_0x3ba2f8(0xb9)]),_0xe61088=parseFloat(document[_0x3ba2f8(0xd2)]('oddsTie')[_0x3ba2f8(0xb9)]),_0xee6911=parseFloat(document[_0x3ba2f8(0xd2)](_0x3ba2f8(0xca))['value']),_0x597db4=0x1/_0x507e3b,_0x3ed87a=0x1/_0xe61088,_0x38f3b2=0x1/_0xee6911;p3=_0x597db4/(_0x597db4+_0x3ed87a+_0x38f3b2),p2=_0x3ed87a/(_0x597db4+_0x3ed87a+_0x38f3b2),p1=_0x38f3b2/(_0x597db4+_0x3ed87a+_0x38f3b2);const _0x3234ba=[0x1,0x1],_0x279963=fmin[_0x3ba2f8(0xcf)](objectiveX,_0x3234ba,{'maxIterations':0x7d0,'zeroDelta':0.0001}),_0x1e0bc1=_0x279963['x'][0x1],_0x5d2bac=_0x279963['x'][0x0];document[_0x3ba2f8(0xd2)](_0x3ba2f8(0xc1))[_0x3ba2f8(0xc7)]=_0x3ba2f8(0xbd)+(p3*0x64)[_0x3ba2f8(0xd3)](0x2)+_0x3ba2f8(0xb6)+(p2*0x64)[_0x3ba2f8(0xd3)](0x2)+_0x3ba2f8(0xdb)+(p1*0x64)['toFixed'](0x2)+'%',document[_0x3ba2f8(0xd2)]('resultOdds')['innerHTML']=_0x3ba2f8(0xbc)+_0x1e0bc1[_0x3ba2f8(0xd3)](0x4)+_0x3ba2f8(0xc4)+_0x5d2bac['toFixed'](0x4);}let target_prob=0x0,target_line=0x0;function _0x5de6(){const _0x256756=['sqrt','poisson','underB','resultImpliedOdds','pmf_0','cdf','<br>Goal\x20Rate\x20for\x20Team\x20B\x20(Lambda\x20B):\x20','cdf_neg1','%</span><br>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>B\x20Goal\x20Rate\x20(Lambda):\x20<b>','innerHTML','2eztGMK','underA','oddsB','16bisGTs','overB','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>Odds\x20(A<','1971009AxwZKP','nelderMead','5022820vAXYte','950880dPWrwa','getElementById','toFixed','result','1478010PBynzG','one_minus_cdf_0','log','exp','%</span><br>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>A\x20Goal\x20Rate\x20(Lambda):\x20<b>','</b></span><br><br>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','%,\x20B:\x20','pow','resultGoals',')\x20=\x20','lineB','930759QRsQNW','%</span><br>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>Odds\x20(B>','oddsA','%,\x20Tie:\x20','4vDUNIt','403658xKOOgb','value','1822680ftyXWi','</b></span><br><br>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>Odds\x20(B<','Goal\x20Rate\x20for\x20Team\x20A\x20(Lambda\x20A):\x20','Implied\x20Odds,\x20A:\x20'];_0x5de6=function(){return _0x256756;};return _0x5de6();}function poissonError(_0x3f9d48){const _0x1deb56=_0x1c20;let _0x551937=_0x3f9d48[0x0],_0x100ae2=jStat[_0x1deb56(0xbf)][_0x1deb56(0xc3)](Math['floor'](target_line),_0x551937);return(_0x100ae2-target_prob)**0x2;}function estimateFromLines(){const _0x2b1754=_0x1c20;let _0xbe73c7=parseFloat(document[_0x2b1754(0xd2)]('lineA')['value']),_0x232c39=0x1/parseFloat(document[_0x2b1754(0xd2)]('overA')[_0x2b1754(0xb9)]),_0x422814=0x1/parseFloat(document[_0x2b1754(0xd2)](_0x2b1754(0xc9))['value']),_0x317b23=parseFloat(document[_0x2b1754(0xd2)](_0x2b1754(0xb2))[_0x2b1754(0xb9)]),_0x8e4415=0x1/parseFloat(document[_0x2b1754(0xd2)](_0x2b1754(0xcc))[_0x2b1754(0xb9)]),_0x457866=0x1/parseFloat(document[_0x2b1754(0xd2)](_0x2b1754(0xc0))['value']),_0x23130b=_0x232c39+_0x422814;_0x232c39=_0x232c39/_0x23130b,_0x422814=_0x422814/_0x23130b;const _0x1e0cc0=[0x1];target_prob=_0x422814,target_line=_0xbe73c7;const _0x3b6089=fmin[_0x2b1754(0xcf)](poissonError,_0x1e0cc0);console[_0x2b1754(0xd7)](_0x3b6089);let _0x4b74c1=_0x8e4415+_0x457866;_0x8e4415=_0x8e4415/_0x4b74c1,_0x457866=_0x457866/_0x4b74c1,target_prob=0x0,target_line=0x0;const _0x30da97=[0x1];target_prob=_0x457866,target_line=_0x317b23;const _0x19a209=fmin[_0x2b1754(0xcf)](poissonError,_0x30da97);console['log'](_0x19a209),document[_0x2b1754(0xd2)](_0x2b1754(0xb0))['innerHTML']=_0x2b1754(0xcd)+_0xbe73c7+')\x20=\x20'+(_0x422814*0x64)[_0x2b1754(0xd3)](0x2)+'%</span><br>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>Odds\x20(A>'+_0xbe73c7+_0x2b1754(0xb1)+(_0x232c39*0x64)[_0x2b1754(0xd3)](0x2)+_0x2b1754(0xd9)+_0x3b6089['x'][0x0][_0x2b1754(0xd3)](0x4)+_0x2b1754(0xbb)+_0x317b23+_0x2b1754(0xb1)+(_0x457866*0x64)['toFixed'](0x2)+_0x2b1754(0xb4)+_0x317b23+_0x2b1754(0xb1)+(_0x8e4415*0x64)[_0x2b1754(0xd3)](0x2)+_0x2b1754(0xc6)+_0x19a209['x'][0x0][_0x2b1754(0xd3)](0x4)+_0x2b1754(0xda);}
+        (function (_0xe6f3a5, _0x3ab05c) {
+            const _0x1b79b2 = _0x5b5a, _0x2344a = _0xe6f3a5();
+            while (!![]) {
+                try {
+                    const _0x3f025a = -parseInt(_0x1b79b2(0x1d0)) / 0x1 * (parseInt(_0x1b79b2(0x1f3)) / 0x2) + -parseInt(_0x1b79b2(0x1fa)) / 0x3 + parseInt(_0x1b79b2(0x1fe)) / 0x4 + parseInt(_0x1b79b2(0x1d1)) / 0x5 * (-parseInt(_0x1b79b2(0x1cd)) / 0x6) + parseInt(_0x1b79b2(0x1f0)) / 0x7 * (parseInt(_0x1b79b2(0x1f2)) / 0x8) + parseInt(_0x1b79b2(0x1d6)) / 0x9 * (parseInt(_0x1b79b2(0x1de)) / 0xa) + -parseInt(_0x1b79b2(0x1f7)) / 0xb;
+                    if (_0x3f025a === _0x3ab05c)
+                        break;
+                    else
+                        _0x2344a['push'](_0x2344a['shift']());
+                } catch (_0x38ee71) {
+                    _0x2344a['push'](_0x2344a['shift']());
+                }
+            }
+        }(_0x537f, 0x9668b));
+        let p1 = 0x0, p2 = 0x0, p3 = 0x0, oddA = 0x0, oddTie = 0x0, oddB = 0x0;
+        function besseli(_0x2f547a, _0x537a5e) {
+            const _0xf63556 = _0x5b5a;
+            return BESSEL[_0xf63556(0x1ec)](_0x537a5e, _0x2f547a);
+        }
+        function _0x5b5a(_0x20ae03, _0x59fbb4) {
+            const _0x537f02 = _0x537f();
+            return _0x5b5a = function (_0x5b5a9f, _0x12e7e6) {
+                _0x5b5a9f = _0x5b5a9f - 0x1cb;
+                let _0x1ea258 = _0x537f02[_0x5b5a9f];
+                return _0x1ea258;
+            }, _0x5b5a(_0x20ae03, _0x59fbb4);
+        }
+        function skellamCDF(_0x4bf0a4, _0x59ad61, _0x4f2db4) {
+            let _0x375793 = 0x0;
+            for (let _0x4f56cc = -0x64; _0x4f56cc <= _0x4bf0a4; _0x4f56cc++) {
+                _0x375793 += skellamPMF(_0x4f56cc, _0x59ad61, _0x4f2db4);
+            }
+            return _0x375793;
+        }
+        function skellamPMF(_0x4c8022, _0x4f9ca4, _0x42b355) {
+            const _0x508b5b = _0x5b5a;
+            return _0x4c8022 < 0x0 ? Math[_0x508b5b(0x1d8)](-(_0x42b355 + _0x4f9ca4)) * Math[_0x508b5b(0x1e3)](_0x42b355 / _0x4f9ca4, _0x4c8022 / 0x2) * besseli(-_0x4c8022, 0x2 * Math[_0x508b5b(0x1fd)](_0x42b355 * _0x4f9ca4)) : Math[_0x508b5b(0x1d8)](-(_0x4f9ca4 + _0x42b355)) * Math['pow'](_0x4f9ca4 / _0x42b355, _0x4c8022 / 0x2) * besseli(_0x4c8022, 0x2 * Math[_0x508b5b(0x1fd)](_0x4f9ca4 * _0x42b355));
+        }
+        function objectiveX(_0x16f8c5) {
+            const _0xd26eac = _0x5b5a, _0x1e9746 = _0x16f8c5[0x0], _0x4663d9 = _0x16f8c5[0x1];
+            if (_0x1e9746 <= 0x0 || _0x4663d9 <= 0x0)
+                return Infinity;
+            const _0x174f6f = skellamCDF(-0x1, _0x1e9746, _0x4663d9), _0x1e6907 = skellamPMF(0x0, _0x1e9746, _0x4663d9), _0x551a31 = 0x1 - skellamCDF(0x0, _0x1e9746, _0x4663d9), _0x2328a7 = Math['pow'](_0x174f6f - p1, 0x2) + Math[_0xd26eac(0x1e3)](_0x1e6907 - p2, 0x2) + Math[_0xd26eac(0x1e3)](_0x551a31 - p3, 0x2);
+            return console[_0xd26eac(0x1f8)]([
+                ..._0x16f8c5,
+                _0x2328a7
+            ]), _0x2328a7;
+        }
+        function estimateParameters() {
+            const _0x1e0096 = _0x5b5a;
+            let _0x22e541 = parseFloat(document[_0x1e0096(0x1d2)]('cdf_neg1')[_0x1e0096(0x1cf)]['trim']() || document[_0x1e0096(0x1d2)](_0x1e0096(0x1dc))[_0x1e0096(0x1ef)]), _0x2e53a6 = parseFloat(document[_0x1e0096(0x1d2)](_0x1e0096(0x1e1))[_0x1e0096(0x1cf)][_0x1e0096(0x1ce)]() || document[_0x1e0096(0x1d2)]('pmf_0')[_0x1e0096(0x1ef)]), _0xa89f61 = parseFloat(document['getElementById']('one_minus_cdf_0')[_0x1e0096(0x1cf)][_0x1e0096(0x1ce)]() || document[_0x1e0096(0x1d2)](_0x1e0096(0x1e0))[_0x1e0096(0x1ef)]);
+            p1 = _0x22e541 / (_0x22e541 + _0x2e53a6 + _0xa89f61), p2 = _0x2e53a6 / (_0x22e541 + _0x2e53a6 + _0xa89f61), p3 = _0xa89f61 / (_0x22e541 + _0x2e53a6 + _0xa89f61);
+            const _0x54a659 = [
+                    0x1,
+                    0x1
+                ], _0x1ba0fe = fmin[_0x1e0096(0x1e2)](objectiveX, _0x54a659, {
+                    'maxIterations': 0x7d0,
+                    'zeroDelta': 0.0001
+                }), _0x8a1fdc = _0x1ba0fe['x'][0x1], _0x5f208e = _0x1ba0fe['x'][0x0];
+            document[_0x1e0096(0x1d2)]('result')[_0x1e0096(0x1eb)] = _0x1e0096(0x1fb) + _0x8a1fdc[_0x1e0096(0x200)](0x4) + _0x1e0096(0x1f9) + _0x5f208e[_0x1e0096(0x200)](0x4) + '</div>';
+        }
+        function _0x537f() {
+            const _0x35457e = [
+                '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i>Goal\x20Rates\x20</i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Team\x20A\x20(Lambda\x20A):\x20',
+                'underA',
+                '2766bcmnOb',
+                'trim',
+                'value',
+                '1yyLhPv',
+                '10fLoJMN',
+                'getElementById',
+                'underB',
+                'resultImpliedOdds',
+                'oddsB',
+                '3663909vyijIV',
+                'startsWith',
+                'exp',
+                ')\x20=\x20',
+                'oddsA',
+                'poisson',
+                'cdf_neg1',
+                '%</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>B\x20Goal\x20Rate\x20(Lambda):\x20<b>',
+                '30eLPySw',
+                'map',
+                'one_minus_cdf_0',
+                'pmf_0',
+                'nelderMead',
+                'pow',
+                '%</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>B:\x20',
+                'floor',
+                '%</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>A\x20Goal\x20Rate\x20(Lambda):\x20<b>',
+                'resultOdds',
+                '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i>Implied\x20Odds</i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>A:\x20',
+                'abs',
+                '</b></div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Odds\x20(B<',
+                'innerHTML',
+                'besseli',
+                'oddsTie',
+                'cdf',
+                'placeholder',
+                '3676813oICdKb',
+                '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Odds\x20(A<',
+                '8CxOOYZ',
+                '1305404KFXDXz',
+                'includes',
+                'overB',
+                '%</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Tie:\x20',
+                '12080662qMIuqt',
+                'log',
+                '</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Goal\x20Rate\x20for\x20Team\x20B\x20(Lambda\x20B):\x20',
+                '472602ucQMbl',
+                '\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Goal\x20Rate\x20for\x20Team\x20A\x20(Lambda\x20A):\x20',
+                '%</div>',
+                'sqrt',
+                '3115652AlCfKC',
+                '%</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Odds\x20(B>',
+                'toFixed'
+            ];
+            _0x537f = function () {
+                return _0x35457e;
+            };
+            return _0x537f();
+        }
+        function get_odds_value(_0x4808b0) {
+            const _0x390e67 = _0x5b5a;
+            if (_0x4808b0[_0x390e67(0x1f4)]('/')) {
+                let [_0x4568f4, _0x9850b5] = _0x4808b0['split']('/')[_0x390e67(0x1df)](Number);
+                if (!isNaN(_0x4568f4) && !isNaN(_0x9850b5))
+                    return _0x4568f4 / _0x9850b5 + 0x1;
+            }
+            if (_0x4808b0[_0x390e67(0x1d7)]('+') || _0x4808b0[_0x390e67(0x1d7)]('-')) {
+                let _0x190738 = parseFloat(_0x4808b0);
+                if (!isNaN(_0x190738))
+                    return _0x190738 > 0x0 ? _0x190738 / 0x64 + 0x1 : 0x64 / Math[_0x390e67(0x1e9)](_0x190738) + 0x1;
+            }
+            return parseFloat(_0x4808b0);
+        }
+        function estimateParametersOdds() {
+            const _0xfc679f = _0x5b5a;
+            let _0x2199a7 = get_odds_value(document[_0xfc679f(0x1d2)](_0xfc679f(0x1da))[_0xfc679f(0x1cf)]), _0x4470d3 = get_odds_value(document[_0xfc679f(0x1d2)](_0xfc679f(0x1ed))[_0xfc679f(0x1cf)]), _0x526472 = get_odds_value(document[_0xfc679f(0x1d2)](_0xfc679f(0x1d5))[_0xfc679f(0x1cf)]), _0x38cb10 = 0x1 / _0x2199a7, _0x416603 = 0x1 / _0x4470d3, _0x4161ab = 0x1 / _0x526472;
+            p3 = _0x38cb10 / (_0x38cb10 + _0x416603 + _0x4161ab), p2 = _0x416603 / (_0x38cb10 + _0x416603 + _0x4161ab), p1 = _0x4161ab / (_0x38cb10 + _0x416603 + _0x4161ab);
+            const _0x462bc1 = [
+                    0x1,
+                    0x1
+                ], _0xa696b = fmin[_0xfc679f(0x1e2)](objectiveX, _0x462bc1, {
+                    'maxIterations': 0x7d0,
+                    'zeroDelta': 0.0001
+                }), _0x1849e3 = _0xa696b['x'][0x1], _0x582f4f = _0xa696b['x'][0x0];
+            document[_0xfc679f(0x1d2)](_0xfc679f(0x1d4))[_0xfc679f(0x1eb)] = _0xfc679f(0x1e8) + (p3 * 0x64)['toFixed'](0x2) + _0xfc679f(0x1f6) + (p2 * 0x64)[_0xfc679f(0x200)](0x2) + _0xfc679f(0x1e4) + (p1 * 0x64)[_0xfc679f(0x200)](0x2) + _0xfc679f(0x1fc), document[_0xfc679f(0x1d2)](_0xfc679f(0x1e7))[_0xfc679f(0x1eb)] = _0xfc679f(0x1cb) + _0x1849e3[_0xfc679f(0x200)](0x4) + '</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Team\x20B\x20(Lambda\x20B):\x20' + _0x582f4f[_0xfc679f(0x200)](0x4) + '</div>';
+        }
+        let target_prob = 0x0, target_line = 0x0;
+        function poissonError(_0x433ae1) {
+            const _0xb2a31 = _0x5b5a;
+            let _0x44ed42 = _0x433ae1[0x0], _0x2a872c = jStat[_0xb2a31(0x1db)][_0xb2a31(0x1ee)](Math[_0xb2a31(0x1e5)](target_line), _0x44ed42);
+            return (_0x2a872c - target_prob) ** 0x2;
+        }
+        function estimateFromLines() {
+            const _0x1fb8eb = _0x5b5a;
+            debugger;
+            let _0x35a03f = parseFloat(document[_0x1fb8eb(0x1d2)]('lineA')['value']), _0x3a5494 = 0x1 / get_odds_value(document[_0x1fb8eb(0x1d2)]('overA')[_0x1fb8eb(0x1cf)]), _0x2e0ab1 = 0x1 / get_odds_value(document['getElementById'](_0x1fb8eb(0x1cc))[_0x1fb8eb(0x1cf)]), _0x8f5790 = parseFloat(document['getElementById']('lineB')['value']), _0x220612 = 0x1 / get_odds_value(document[_0x1fb8eb(0x1d2)](_0x1fb8eb(0x1f5))[_0x1fb8eb(0x1cf)]), _0x590618 = 0x1 / get_odds_value(document[_0x1fb8eb(0x1d2)](_0x1fb8eb(0x1d3))[_0x1fb8eb(0x1cf)]), _0x35211f = _0x3a5494 + _0x2e0ab1;
+            _0x3a5494 = _0x3a5494 / _0x35211f, _0x2e0ab1 = _0x2e0ab1 / _0x35211f;
+            const _0x196df2 = [0x1];
+            target_prob = _0x2e0ab1, target_line = _0x35a03f;
+            const _0x2f3b02 = fmin[_0x1fb8eb(0x1e2)](poissonError, _0x196df2);
+            console['log'](_0x2f3b02);
+            let _0xbc68c9 = _0x220612 + _0x590618;
+            _0x220612 = _0x220612 / _0xbc68c9, _0x590618 = _0x590618 / _0xbc68c9, target_prob = 0x0, target_line = 0x0;
+            const _0x381daa = [0x1];
+            target_prob = _0x590618, target_line = _0x8f5790;
+            const _0x39fcf0 = fmin[_0x1fb8eb(0x1e2)](poissonError, _0x381daa);
+            console['log'](_0x39fcf0), document[_0x1fb8eb(0x1d2)]('resultGoals')['innerHTML'] = _0x1fb8eb(0x1f1) + _0x35a03f + _0x1fb8eb(0x1d9) + (_0x2e0ab1 * 0x64)['toFixed'](0x2) + '%</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>Odds\x20(A>' + _0x35a03f + ')\x20=\x20' + (_0x3a5494 * 0x64)[_0x1fb8eb(0x200)](0x2) + _0x1fb8eb(0x1e6) + _0x2f3b02['x'][0x0][_0x1fb8eb(0x200)](0x4) + _0x1fb8eb(0x1ea) + _0x8f5790 + ')\x20=\x20' + (_0x590618 * 0x64)[_0x1fb8eb(0x200)](0x2) + _0x1fb8eb(0x1ff) + _0x8f5790 + _0x1fb8eb(0x1d9) + (_0x220612 * 0x64)[_0x1fb8eb(0x200)](0x2) + _0x1fb8eb(0x1dd) + _0x39fcf0['x'][0x0]['toFixed'](0x4) + '</b></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';
+        }        
 
     </script>
 </body>
